@@ -1,0 +1,34 @@
+const canvas: HTMLCanvasElement = document.getElementById('canvas') as HTMLCanvasElement;
+const ctx = canvas.getContext('2d');
+
+const getColorIndicesForCoord = (x, y, width) => {
+  const red = y * (width * 4) + x * 4;
+  const indicies = [red, red + 1, red + 2, red + 3];
+  const [redIndex, greenIndex, blueIndex, alphaIndex] = indicies;
+  return {redIndex, greenIndex, blueIndex, alphaIndex};
+};
+
+type Index = ReturnType<typeof getColorIndicesForCoord>;
+const COLORS: Record<string, [number, number, number, number]> = {
+  White: [255, 255, 255, 255],
+  Black: [0, 0, 0, 255],
+  Blue: [63, 151, 207, 255]
+}
+const setColor = (id: ImageData, index: Index, color: [number, number, number, number]) => {
+  id.data[index.redIndex] = color[0];
+  id.data[index.greenIndex] = color[1];
+  id.data[index.blueIndex] = color[2];
+  id.data[index.alphaIndex] = color[3];
+}
+
+const width = 1024;
+const height = 1024;
+var myImageData = ctx.createImageData(width, height);
+[[100, 200, 200], [200, 300, 50]].forEach(([x, y, size]) => {
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+    setColor(myImageData, getColorIndicesForCoord(x+i, y+j, width), COLORS.Blue);
+    }
+  }
+});
+ctx.putImageData(myImageData, 0, 0);

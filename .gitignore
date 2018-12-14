@@ -1,0 +1,4 @@
+node_modules
+dist
+cmake-build-*
+googletest-release-1.8.1
